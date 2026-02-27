@@ -1,0 +1,139 @@
+You are a senior Software Engineering professor and technical documentation expert.
+
+I am working on Experiment 5 for my subject:
+ICS1405 – Software Engineering Principles and Practices.
+
+My project is:
+FlowMotion – Intelligent Habit & Routine Management System (Django + SQLite + AI + Scheduler).
+
+Task:
+Generate a COMPLETE, DETAILED, and WELL-STRUCTURED laboratory record / assignment answer for:
+
+"Experiment 5: Explore Git and GitHub Commands and Practice Source Code Management"
+
+Follow strictly the university instructions and marking scheme.
+
+The answer must be LONG, DETAILED, and SUITABLE FOR FULL MARKS.
+
+-------------------------------------------------
+Include the following sections in proper academic format:
+
+TITLE PAGE CONTENT
+
+1. Introduction
+   - Experiment Overview
+   - Importance of Version Control
+   - Relevance to FlowMotion Project
+   - Objectives
+   - Scope and Assumptions
+
+2. Tools and Environment
+   - Git
+   - GitHub
+   - Replit / VS Code
+   - Operating System
+   - Browser
+
+3. Repository Setup
+   - Step-by-step creation of Git repository
+   - Initialization using git init
+   - Linking to GitHub remote repository
+   - Repository folder structure
+   - Branch hierarchy (main, develop, feature branches)
+   - Branch naming conventions
+   - Diagram outline of repository structure (in text form)
+
+4. Version Control Operations
+   - Detailed explanation of:
+     git status
+     git add
+     git commit
+     git log
+     git branch
+     git checkout / git switch
+     git merge
+     git pull
+     git push
+     git stash
+     git clone
+   - Incremental commit strategy
+   - Feature branch development
+   - Merge process
+   - Conflict resolution example
+   - Sample commit history (formatted)
+   - Screenshots description (text form)
+
+5. Git Workflow Implementation
+   - Explanation of chosen workflow (GitFlow / Feature Branch Workflow)
+   - How FlowMotion followed the workflow
+   - Daily development cycle
+   - Collaboration process
+   - Code review process
+   - Backup and recovery process
+
+6. Workflow Analysis
+   - Efficiency analysis
+   - Benefits observed
+   - Limitations
+   - Risk analysis
+   - Impact on project quality
+
+7. Comparison of Alternative Workflows
+   - Centralized Workflow
+   - Feature Branch Workflow
+   - GitFlow Workflow
+   - Trunk-Based Development
+   - Comparison table
+   - Suitability for student projects
+
+8. Documentation and Evidence
+   - Command logs
+   - Branch screenshots (description)
+   - Commit screenshots (description)
+   - Merge records
+   - README documentation
+   - Version tagging
+
+9. Observations
+   - Technical observations
+   - Team coordination observations
+   - Learning observations
+   - Challenges faced
+   - Solutions implemented
+
+10. Conclusion
+    - Summary of work
+    - Learning outcomes
+    - Professional relevance
+    - Project improvement
+
+11. Future Enhancements
+    - CI/CD integration
+    - GitHub Actions
+    - Automated testing
+    - Code quality tools
+    - Security scanning
+
+12. Appendix
+    - Sample Git Commands
+    - Sample .gitignore
+    - Sample README
+    - Sample commit messages
+
+-------------------------------------------------
+
+Important Requirements:
+
+✔ Write in formal academic language  
+✔ Use FlowMotion project as reference everywhere  
+✔ Provide examples and commands  
+✔ Add tables where suitable  
+✔ Make content detailed enough for 5–6 pages  
+✔ Follow lab record style  
+✔ No short answers  
+✔ No missing sections  
+✔ Focus on scoring maximum marks  
+
+-------------------------------------------------
+
+Now generate the COMPLETE assignment in proper format.
