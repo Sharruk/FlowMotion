@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container text-center">
+    <h2>Choose Widget Type</h2>
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h3>Habit Widget</h3>
+                <p>Link to an existing habit or create a new one with tracking.</p>
+                <a href="{% url 'habit_create' %}" class="btn btn-primary">Create Habit Widget</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h3>Standalone Countdown</h3>
+                <p>Independent timer for events, deadlines, or goals.</p>
+                <a href="{% url 'create_countdown_widget' %}" class="btn btn-success">Create Countdown Widget</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

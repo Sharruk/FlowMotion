@@ -4,7 +4,44 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
 from datetime import date, timedelta
-from .models import Habit, YesNoHabit, MeasurableHabit, HabitResponse, StreakData, AIRecommendation
+from .models import Habit, YesNoHabit, MeasurableHabit, HabitResponse, StreakData, AIRecommendation, CountdownWidget
+
+@login_required
+def widgets_list(request):
+    habits = Habit.objects.filter(user=request.user, widget_enabled=True)
+    countdown_widgets = CountdownWidget.objects.filter(user=request.user)
+    return render(request, 'habits/widgets_list.html', {
+        'habits': habits,
+        'countdown_widgets': countdown_widgets
+    })
+
+@login_required
+def create_widget_choice(request):
+    return render(request, 'habits/create_widget_choice.html')
+
+@login_required
+def create_habit_widget(request):
+    # This logic is mostly handled by habit_create with widget_enabled=True
+    return redirect('habit_create')
+
+@login_required
+def create_countdown_widget(request):
+    if request.method == 'POST':
+        widget = CountdownWidget.objects.create(
+            user=request.user,
+            title=request.POST.get('title'),
+            target_date=request.POST.get('target_date'),
+            target_time=request.POST.get('target_time'),
+            recurrence=request.POST.get('recurrence'),
+            notes=request.POST.get('notes')
+        )
+        return redirect('widgets_list')
+    return render(request, 'habits/create_countdown_widget.html')
+
+@login_required
+def view_countdown_widget(request, widget_id):
+    widget = get_object_or_404(CountdownWidget, id=widget_id, user=request.user)
+    return render(request, 'habits/view_countdown_widget.html', {'widget': widget})
 from .ai_utils import get_habit_suggestions, get_emotional_feedback
 from services.ai_recommendation import get_ai_tool_recommendations
 from .notification_service import send_notification

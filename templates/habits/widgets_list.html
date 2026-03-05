@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2>My Widgets</h2>
+    <div class="actions mb-4">
+        <a href="{% url 'create_widget_choice' %}" class="btn btn-primary">+ Create New Widget</a>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Habit Widgets</h3>
+            {% for habit in habits %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ habit.name }}</h5>
+                        <p class="card-text">{{ habit.recurrence }} - {{ habit.reminder_time }}</p>
+                        <a href="{% url 'habit_detail' habit.id %}?widget=true" class="btn btn-sm btn-outline-primary">View Widget</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No habit widgets yet.</p>
+            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <h3>Standalone Countdowns</h3>
+            {% for widget in countdown_widgets %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ widget.title }}</h5>
+                        <p class="card-text">{{ widget.target_date }} {{ widget.target_time }}</p>
+                        <a href="{% url 'view_countdown_widget' widget.id %}" class="btn btn-sm btn-outline-primary">View Widget</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No standalone countdowns yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

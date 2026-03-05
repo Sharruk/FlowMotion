@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2>Create Standalone Countdown</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Target Date</label>
+                <input type="date" name="target_date" class="form-control" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Target Time</label>
+                <input type="time" name="target_time" class="form-control" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Recurrence</label>
+            <select name="recurrence" class="form-control">
+                <option value="none">No Repeat</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Notes</label>
+            <textarea name="notes" class="form-control" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Widget</button>
+    </form>
+</div>
+{% endblock %}

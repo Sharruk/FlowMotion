@@ -40,8 +40,25 @@ class Habit(models.Model):
     
     # New fields for advanced countdown and recurrence
     target_date = models.DateField(null=True, blank=True)
+    target_time = models.TimeField(null=True, blank=True) # Separate from reminder_time for clarity
     recurrence = models.CharField(max_length=20, choices=[('none', 'No Repeat'), ('daily', 'Daily'), ('weekly', 'Weekly')], default='daily')
     selected_days = models.JSONField(default=list, blank=True) # e.g., ["Mon", "Wed", "Sun"]
+    widget_type = models.CharField(max_length=20, choices=[('habit', 'Habit'), ('countdown', 'Countdown')], default='habit')
+
+class CountdownWidget(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='countdown_widgets')
+    title = models.CharField(max_length=200)
+    target_date = models.DateField()
+    target_time = models.TimeField()
+    recurrence = models.CharField(max_length=20, choices=[('none', 'No Repeat'), ('daily', 'Daily'), ('weekly', 'Weekly')], default='none')
+    selected_days = models.JSONField(default=list, blank=True)
+    notes = models.TextField(blank=True)
+    color = models.CharField(max_length=7, default='#6366f1')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
     
     class Meta:
         ordering = ['-created_at']

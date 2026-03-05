@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="widget-container">
+    <div class="widget-card" style="border-top: 5px solid {{ widget.color }}">
+        <div class="widget-header">
+            <h3>{{ widget.title }}</h3>
+        </div>
+        
+        <div class="widget-body">
+            <div class="circular-countdown">
+                <svg viewBox="0 0 100 100">
+                    <circle class="bg" cx="50" cy="50" r="45"></circle>
+                    <circle class="progress" cx="50" cy="50" r="45" id="progress-circle"></circle>
+                </svg>
+                <div class="countdown-text">
+                    <span id="time-value">--</span>
+                    <span id="time-label">Units</span>
+                </div>
+            </div>
+            
+            <div id="countdown-data" 
+                 data-time="{{ widget.target_time|time:'H:i' }}"
+                 data-date="{{ widget.target_date|date:'Y-m-d' }}"
+                 data-recurrence="{{ widget.recurrence }}"
+                 style="display:none;">
+            </div>
+
+            {% if widget.notes %}
+            <p class="text-muted mt-3 small">{{ widget.notes }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.widget-container { display: flex; justify-content: center; padding: 20px; }
+.widget-card { background: #fff; border-radius: 12px; width: 300px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+.circular-countdown { position: relative; width: 150px; height: 150px; margin: 20px auto; }
+.circular-countdown svg { transform: rotate(-90deg); }
+.circular-countdown circle { fill: none; stroke-width: 8; }
+.circular-countdown circle.bg { stroke: #eee; }
+.circular-countdown circle.progress { stroke: {{ widget.color }}; stroke-dasharray: 283; stroke-dashoffset: 0; transition: stroke-dashoffset 0.5s ease; }
+.countdown-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+#time-value { display: block; font-size: 32px; font-weight: bold; }
+#time-label { font-size: 14px; color: #666; }
+</style>
+
+<script>
+function updateCountdown() {
+    const data = document.getElementById('countdown-data');
+    const timeStr = data.dataset.time;
+    const dateStr = data.dataset.date;
+    const recurrence = data.dataset.recurrence;
+    
+    const now = new Date();
+    let target = new Date(dateStr + 'T' + timeStr);
+    
+    if (target < now) {
+        if (recurrence === 'daily') target.setDate(target.getDate() + 1);
+        else if (recurrence === 'weekly') target.setDate(target.getDate() + 7);
+    }
+    
+    const diff = target - now;
+    const circle = document.getElementById('progress-circle');
+    const val = document.getElementById('time-value');
+    const lbl = document.getElementById('time-label');
+    
+    if (diff > 0) {
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        
+        if (d > 0) { val.innerText = d; lbl.innerText = d === 1 ? 'Day' : 'Days'; }
+        else if (h > 0) { val.innerText = h; lbl.innerText = h === 1 ? 'Hour' : 'Hours'; }
+        else { val.innerText = m; lbl.innerText = m === 1 ? 'Min' : 'Mins'; }
+        
+        circle.style.strokeDashoffset = 283 * (1 - (diff / (86400000 * 7))); // Normalized to 7 days
+    } else {
+        val.innerText = '0'; lbl.innerText = 'Due';
+        circle.style.strokeDashoffset = 283;
+    }
+}
+setInterval(updateCountdown, 60000);
+updateCountdown();
+</script>
+{% endblock %}
