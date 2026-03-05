@@ -225,6 +225,7 @@ def create_widget(request, habit_id):
 def create_countdown_shortcut(request, widget_id):
     widget = get_object_or_404(CountdownWidget, id=widget_id, user=request.user)
     from .widget_utils import _create_linux_shortcut, _create_windows_shortcut, slugify_name
+    from django.urls import reverse
     import platform
     import os
     
