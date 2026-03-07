@@ -7,39 +7,26 @@
             <h1>{{ habit.name }}</h1>
         </header>
 
-        <div class="widget-info">
-            <div class="deadline-info">
-                <strong>Deadline:</strong> 
-                {% if habit.reminder_time %}
-                    {{ habit.reminder_time|time:"H:i" }}
-                {% else %}
-                    No deadline set
-                {% endif %}
-            </div>
-
-            <div class="status-info">
-                <strong>Status:</strong>
-                {% if today_response and today_response.completed %}
-                    <span class="status-badge completed">✅ Completed</span>
-                {% else %}
-                    <span class="status-badge pending">❌ Pending</span>
-                {% endif %}
-            </div>
-
-            <div class="countdown-container">
-                <div id="widget-countdown" class="countdown" 
-                     data-start="{{ start_date }}" 
-                     data-duration="{{ duration }}"
-                     data-time="{{ reminder_time }}"
-                     data-server-time="{{ server_time }}">
-                    Calculating...
+            <div class="circular-countdown">
+                <svg viewBox="0 0 100 100">
+                    <circle class="bg" cx="50" cy="50" r="45"></circle>
+                    <circle class="progress" cx="50" cy="50" r="45" id="progress-circle"></circle>
+                </svg>
+                <div class="countdown-text">
+                    <span id="time-value">--</span>
+                    <span id="time-label">Days</span>
                 </div>
-                <div id="deadline-status" class="deadline-status"></div>
             </div>
-        </div>
 
         <div class="widget-footer">
             <a href="{% url 'habit_detail' habit.id %}" class="btn btn-sm btn-outline-primary">Open Full View</a>
+        </div>
+        <div id="countdown-data" 
+             data-start="{{ start_date }}" 
+             data-duration="{{ duration }}"
+             data-time="{{ reminder_time }}"
+             data-server-time="{{ server_time }}"
+             style="display:none;">
         </div>
     </div>
 </div>
@@ -68,6 +55,56 @@ body {
     width: 100%;
     max-width: 300px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.circular-countdown {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+}
+
+.circular-countdown svg {
+    transform: rotate(-90deg);
+}
+
+.circular-countdown circle {
+    fill: none;
+    stroke-width: 8;
+}
+
+.circular-countdown .bg {
+    stroke: #eee;
+}
+
+.circular-countdown .progress {
+    stroke: #6366f1;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.countdown-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#time-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    line-height: 1;
+}
+
+#time-label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 5px;
 }
 
 .widget-header h1 {
@@ -112,13 +149,14 @@ body {
 
 <script>
 function updateWidgetCountdown() {
-    const el = document.getElementById('widget-countdown');
-    if (!el) return;
+    const timeValue = document.getElementById('time-value');
+    const progressCircle = document.getElementById('progress-circle');
+    const el = document.getElementById('countdown-data');
+    if (!timeValue || !el) return;
     
     const startDateStr = el.getAttribute('data-start');
     const duration = parseInt(el.getAttribute('data-duration'));
     const serverTimeStr = el.getAttribute('data-server-time');
-    const targetTimeStr = el.getAttribute('data-time');
     
     if (startDateStr && !isNaN(duration)) {
         const startDate = new Date(startDateStr);
@@ -133,7 +171,17 @@ function updateWidgetCountdown() {
         let remaining = duration - daysPassed;
         if (remaining < 0) remaining = 0;
         
-        el.innerText = remaining + " Days";
+        timeValue.innerText = remaining;
+
+        if (progressCircle) {
+            const radius = progressCircle.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+            progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+            
+            const progress = remaining / duration;
+            const offset = circumference - (progress * circumference);
+            progressCircle.style.strokeDashoffset = offset;
+        }
     }
 }
 

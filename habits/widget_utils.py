@@ -73,12 +73,18 @@ def _create_linux_shortcut(desktop_path, slug, obj, widget_url):
     
     # Handle both Habit (name) and CountdownWidget (title)
     display_name = getattr(obj, 'name', getattr(obj, 'title', 'Widget'))
+    
+    # Try to find a nice icon
+    icon = "appointment-new"
+    if hasattr(obj, 'color'):
+        # Just a fallback, linux desktop icons are usually theme-based
+        pass
 
     content = f"""[Desktop Entry]
-Name=FlowMotion – {display_name}
+Name={display_name}
 Comment=Track: {display_name}
 Exec=xdg-open "{widget_url}"
-Icon=appointment-new
+Icon=chronometer
 Terminal=false
 Type=Application
 Categories=Utility;
