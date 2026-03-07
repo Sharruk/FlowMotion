@@ -68,23 +68,45 @@ Prop3=19,11
 
 def _create_linux_shortcut(desktop_path, slug, obj, widget_url):
     """Create a Linux .desktop shortcut file."""
-    file_name = f"flowmotion-{slug}.desktop"
+    file_name = f"{slug}.desktop"
     file_path = os.path.join(desktop_path, file_name)
     
     # Handle both Habit (name) and CountdownWidget (title)
     display_name = getattr(obj, 'name', getattr(obj, 'title', 'Widget'))
     
-    # Try to find a nice icon
-    icon = "appointment-new"
-    if hasattr(obj, 'color'):
-        # Just a fallback, linux desktop icons are usually theme-based
-        pass
+    # Calculate days left for icon selection
+    days_left = 0
+    if hasattr(obj, 'created_at') and hasattr(obj, 'duration'):
+        from django.utils import timezone
+        from datetime import date
+        today = date.today()
+        start_date = obj.created_at.date()
+        days_passed = (today - start_date).days
+        days_left = max(0, obj.duration - days_passed)
+    elif hasattr(obj, 'target_date'):
+        from datetime import date
+        today = date.today()
+        days_left = (obj.target_date - today).days
+
+    # Choose emoji icon based on days left
+    icon_name = "happy.png"
+    if days_left > 20:
+        icon_name = "happy.png"
+    elif days_left > 10:
+        icon_name = "neutral.png"
+    elif days_left > 5:
+        icon_name = "warning.png"
+    else:
+        icon_name = "fire.png"
+    
+    # Get absolute path to the icon
+    icon_path = os.path.join(settings.BASE_DIR, 'static', 'icons', icon_name)
 
     content = f"""[Desktop Entry]
 Name={display_name}
-Comment=Track: {display_name}
+Comment=Track: {display_name} ({days_left} days left)
 Exec=xdg-open "{widget_url}"
-Icon=chronometer
+Icon={icon_path}
 Terminal=false
 Type=Application
 Categories=Utility;
