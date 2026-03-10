@@ -238,12 +238,15 @@
         googleBtn.disabled = true;
         googleBtn.innerHTML = '<span class="google-spinner"></span> Signing in...';
 
-        user.getIdToken()
+        user.getIdToken(true)
             .then(function (idToken) {
-                console.log('Got Firebase ID token, sending to backend...');
+                console.log('Got fresh Firebase ID token, sending to backend...');
                 return fetch('/google-login/', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
                     body: JSON.stringify({ id_token: idToken })
                 });
             })
@@ -256,7 +259,9 @@
                 if (data.success) {
                     // Sign out of Firebase (Django session handles auth now)
                     firebase.auth().signOut().then(function() {
-                        window.location.href = data.redirect || '/dashboard/';
+                        console.log('Firebase signed out, redirecting...');
+                        // Force a hard redirect by setting href and then replacing if needed
+                        window.location.replace(data.redirect || '/dashboard/');
                     });
                 } else {
                     firebase.auth().signOut();
